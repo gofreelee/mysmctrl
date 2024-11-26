@@ -93,7 +93,7 @@ make tests
 #### Known Working
 
 - NVIDIA GPUs from compute capability 3.5 through 8.9, including embedded "Jetson" GPUs
-- CUDA 8.1 through 12.2
+- CUDA 8.0 through 12.2, plus 12.4 and 12.6
 - `x86_64` and Jetson `aarch64` platforms
 
 #### Known Issues

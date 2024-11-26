@@ -11,7 +11,7 @@
  *   +-----------+---------------+---------------+--------------+
  *   |  Version  |  Global Mask  |  Stream Mask  |  Next Mask   |
  *   +-----------+---------------+---------------+--------------+
- *   | 11.0-12.2 | TMD/QMD Hook  | stream struct | TMD/QMD Hook |
+ *   | 11.0-12.6 | TMD/QMD Hook  | stream struct | TMD/QMD Hook |
  *   | 10.2      | global struct | stream struct | N/A          |
  *   | 8.0-10.1  | N/A           | stream struct | N/A          |
  *   +-----------+---------------+---------------+--------------+
@@ -269,12 +269,19 @@ void libsmctrl_set_next_mask(uint64_t mask) {
 // 12.0 tested on 525.147.05
 #define CU_12_2_MASK_OFF 0x4e4
 // 12.2 tested on 535.129.03
+// CUDA 12.3 UNTESTED
+#define CU_12_4_MASK_OFF 0x4ac
+// 12.4 tested on 550.54.14 and 550.54.15
+// CUDA 12.5 UNTESTED
+#define CU_12_6_MASK_OFF 0x4ec
+// 12.6 tested on 560.35.03
 
 // Offsets for the stream struct on aarch64
 // All tested on Nov 13th, 2023
 #define CU_9_0_MASK_OFF_JETSON 0x128 // Tested on TX2
 #define CU_10_2_MASK_OFF_JETSON 0x24c // Tested on TX2 and Jetson Xavier
 #define CU_11_4_MASK_OFF_JETSON 0x394 // Tested on Jetson Orin
+#define CU_12_6_MASK_OFF_JETSON 0x514 // Tested on Jetson Orin
 
 // Used up through CUDA 11.8 in the stream struct
 struct stream_sm_mask {
@@ -316,10 +323,11 @@ int detect_parker_soc() {
 }
 #endif // __aarch64__
 
-// Should work for CUDA 8.0 through 12.2
+// Should work for CUDA 8.0 through 12.2, plus 12.4 and 12.6
 // A cudaStream_t is a CUstream*. We use void* to avoid a cuda.h dependency in
 // our header
 void libsmctrl_set_stream_mask(void* stream, uint64_t mask) {
+	// When the old API is used on GPUs with over 64 TPCs, disable all TPCs >64
 	uint128_t full_mask = -1;
 	full_mask <<= 64;
 	full_mask |= mask;
@@ -377,6 +385,12 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 	case 12020:
 		hw_mask_v2 = (void*)(stream_struct_base + CU_12_2_MASK_OFF);
 		break;
+	case 12040:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_4_MASK_OFF);
+		break;
+	case 12060:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_6_MASK_OFF);
+		break;
 #elif __aarch64__
 	case 9000: {
 		// Jetson TX2 offset is slightly different on CUDA 9.0.
@@ -401,6 +415,9 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 		break;
 	case 11040:
 		hw_mask = (struct stream_sm_mask*)(stream_struct_base + CU_11_4_MASK_OFF_JETSON);
+		break;
+	case 12060:
+		hw_mask = (struct stream_sm_mask*)(stream_struct_base + CU_12_6_MASK_OFF_JETSON);
 		break;
 #endif
 	}
