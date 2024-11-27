@@ -269,19 +269,19 @@ void libsmctrl_set_next_mask(uint64_t mask) {
 // 12.0 tested on 525.147.05
 #define CU_12_2_MASK_OFF 0x4e4
 // 12.2 tested on 535.129.03
-// CUDA 12.3 UNTESTED
+#define CU_12_3_MASK_OFF 0x49c
+// 12.3 tested on 545.29.06
 #define CU_12_4_MASK_OFF 0x4ac
 // 12.4 tested on 550.54.14 and 550.54.15
-// CUDA 12.5 UNTESTED
-#define CU_12_6_MASK_OFF 0x4ec
+#define CU_12_5_MASK_OFF 0x4ec
+// 12.5 tested on 555.58.02
 // 12.6 tested on 560.35.03
 
-// Offsets for the stream struct on aarch64
-// All tested on Nov 13th, 2023
-#define CU_9_0_MASK_OFF_JETSON 0x128 // Tested on TX2
-#define CU_10_2_MASK_OFF_JETSON 0x24c // Tested on TX2 and Jetson Xavier
-#define CU_11_4_MASK_OFF_JETSON 0x394 // Tested on Jetson Orin
-#define CU_12_6_MASK_OFF_JETSON 0x514 // Tested on Jetson Orin
+// Offsets for the stream struct on Jetson aarch64
+#define CU_9_0_MASK_OFF_JETSON 0x128 // Tested on TX2 (Nov 2023)
+#define CU_10_2_MASK_OFF_JETSON 0x24c // Tested on TX2 and Jetson Xavier (Nov 2023)
+#define CU_11_4_MASK_OFF_JETSON 0x394 // Tested on Jetson Orin (Nov 2023)
+#define CU_12_6_MASK_OFF_JETSON 0x514 // Tested on Jetson Orin (Nov 2024)
 
 // Used up through CUDA 11.8 in the stream struct
 struct stream_sm_mask {
@@ -323,7 +323,7 @@ int detect_parker_soc() {
 }
 #endif // __aarch64__
 
-// Should work for CUDA 8.0 through 12.2, plus 12.4 and 12.6
+// Should work for CUDA 8.0 through 12.6
 // A cudaStream_t is a CUstream*. We use void* to avoid a cuda.h dependency in
 // our header
 void libsmctrl_set_stream_mask(void* stream, uint64_t mask) {
@@ -385,11 +385,15 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 	case 12020:
 		hw_mask_v2 = (void*)(stream_struct_base + CU_12_2_MASK_OFF);
 		break;
+	case 12030:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_3_MASK_OFF);
+		break;
 	case 12040:
 		hw_mask_v2 = (void*)(stream_struct_base + CU_12_4_MASK_OFF);
 		break;
+	case 12050:
 	case 12060:
-		hw_mask_v2 = (void*)(stream_struct_base + CU_12_6_MASK_OFF);
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_5_MASK_OFF);
 		break;
 #elif __aarch64__
 	case 9000: {

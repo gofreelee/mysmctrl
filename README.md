@@ -93,7 +93,7 @@ make tests
 #### Known Working
 
 - NVIDIA GPUs from compute capability 3.5 through 8.9, including embedded "Jetson" GPUs
-- CUDA 8.0 through 12.2, plus 12.4 and 12.6
+- CUDA 8.0 through 12.6
 - `x86_64` and Jetson `aarch64` platforms
 
 #### Known Issues
@@ -129,3 +129,5 @@ How this works:
 3. If the test succeeded (returned zero) the loop aborts, otherwise it increments the offset to attempt and repeats.
 
 Once this loop aborts, take the found offset and add it into the switch statement for the appropriate CUDA version and CPU architecture.
+
+If the loop hangs (e.g. at offset 40), terminate and restart the loop with `i` initialized past the offset that hung (e.g. at offset 48).
