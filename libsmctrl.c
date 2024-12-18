@@ -421,7 +421,7 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 		hw_mask = (struct stream_sm_mask*)(stream_struct_base + CU_11_4_MASK_OFF_JETSON);
 		break;
 	case 12060:
-		hw_mask = (struct stream_sm_mask*)(stream_struct_base + CU_12_6_MASK_OFF_JETSON);
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_6_MASK_OFF_JETSON);
 		break;
 #endif
 	}
