@@ -460,16 +460,20 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 // Read an integer from a file in `/proc`
 static int read_int_procfile(char* filename, uint64_t* out) {
 	char f_data[18] = {0};
+	size_t ret;
 	int fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return errno;
-	read(fd, f_data, 18);
+	ret = read(fd, f_data, 18);
+	if (ret == -1)
+		return errno;
 	close(fd);
 	*out = strtoll(f_data, NULL, 16);
 	return 0;
 }
 
-// We support up to 12 GPCs per GPU, and up to 16 GPUs.
+// We support up to 64 TPCs, up to 12 GPCs per GPU, and up to 16 GPUs.
+// TODO: Handle GPUs with greater than 64 TPCs (e.g. some H100 variants)
 static uint64_t tpc_mask_per_gpc_per_dev[16][12];
 // Output mask is vtpc-indexed (virtual TPC)
 int libsmctrl_get_gpc_info(uint32_t* num_enabled_gpcs, uint64_t** tpcs_for_gpc, int dev) {
