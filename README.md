@@ -17,7 +17,7 @@ Please cite this paper in any work which leverages our library. Here's the BibTe
 }
 ```
 
-Please see [the paper](https://www.cs.unc.edu/~jbakita/rtas23.pdf) and libsmctrl.h for details and examples of how to use this library.
+Please see [the paper](https://www.cs.unc.edu/~jbakita/rtas23.pdf) and `libsmctrl.h` for details and examples of how to use this library.
 We strongly encourage consulting those resources first; the below comments serve merely as an appendum.
 
 ## Run-time Dependencies
@@ -104,6 +104,7 @@ make tests
     - Only relevant on GPUs with over 128 TPCs, such as the RTX 6000 Ada
 - Untested on H100 (compute capability 9.0)
 - Untested on non-Jetson `aarch64` platforms
+- Untested on CUDA 11.8, 12.0, and 12.1 on Jetson `aarch64`
 
 ## Important Limitations
 
@@ -113,7 +114,7 @@ make tests
 2. No aspect of this system prevents implicit synchronization on the GPU.
    See prior work, particularly that of Amert et al. (perhaps the CUPiD^RT paper), for ways to avoid this.
 
-## Porting to New Architectures
+## Porting Stream Masking to Newer CUDA Versions
 
 Build the tests with `make tests`. And then run the following:
 ```
@@ -124,7 +125,7 @@ How this works:
 
 1. If `MASK_OFF` is set, `libsmctrl` applies this as a byte offset to a base address for the location
    of the SM mask fields in CUDA's stream data structure.
-  - That base address is the one for CUDA 12.2 at time of writing
+  - That base address is the one for CUDA 12.2 at time of writing.
 2. The stream masking test is run.
 3. If the test succeeded (returned zero) the loop aborts, otherwise it increments the offset to attempt and repeats.
 

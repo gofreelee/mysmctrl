@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Joshua Bakita
+ * Copyright 2022-2024 Joshua Bakita
  * Library to control SM masks on CUDA launches. Co-opts preexisting debug
  * logic in the CUDA driver library, and thus requires a build with -lcuda.
  *
@@ -246,6 +246,8 @@ void libsmctrl_set_next_mask(uint64_t mask) {
 /*** Per-Stream SM Mask (unlikely to be forward-compatible) ***/
 
 // Offsets for the stream struct on x86_64
+// No offset appears to work with CUDA 6.5 (tried 0x0--0x1b4 w/ 4-byte step)
+// 6.5 tested on 340.118
 #define CU_8_0_MASK_OFF 0xec
 #define CU_9_0_MASK_OFF 0x130
 // CUDA 9.0 and 9.1 use the same offset
@@ -274,14 +276,26 @@ void libsmctrl_set_next_mask(uint64_t mask) {
 #define CU_12_4_MASK_OFF 0x4ac
 // 12.4 tested on 550.54.14 and 550.54.15
 #define CU_12_5_MASK_OFF 0x4ec
+// CUDA 12.5 and 12.6 use the same offset
 // 12.5 tested on 555.58.02
 // 12.6 tested on 560.35.03
 
 // Offsets for the stream struct on Jetson aarch64
-#define CU_9_0_MASK_OFF_JETSON 0x128 // Tested on TX2 (Nov 2023)
-#define CU_10_2_MASK_OFF_JETSON 0x24c // Tested on TX2 and Jetson Xavier (Nov 2023)
-#define CU_11_4_MASK_OFF_JETSON 0x394 // Tested on Jetson Orin (Nov 2023)
-#define CU_12_6_MASK_OFF_JETSON 0x514 // Tested on Jetson Orin (Nov 2024)
+#define CU_9_0_MASK_OFF_JETSON 0x128
+// 9.0 tested on Jetpack 3.x (TX2, Nov 2023)
+#define CU_10_2_MASK_OFF_JETSON 0x24c
+// 10.2 tested on Jetpack 4.x (AGX Xaver and TX2, Nov 2023)
+#define CU_11_4_MASK_OFF_JETSON 0x394
+// 11.4 tested on Jetpack 5.x (AGX Orin, Nov 2023)
+// TODO: 11.8, 12.0, 12.1, and 12.2 on Jetpack 5.x via compatibility packages
+#define CU_12_2_MASK_OFF_JETSON 0x50c
+// 12.2 tested on Jetpack 6.x (AGX Orin, Dec 2024)
+#define CU_12_4_MASK_OFF_JETSON 0x4c4
+// 12.4 tested on Jetpack 6.x with cuda-compat-12-4 (AGX Orin, Dec 2024)
+#define CU_12_5_MASK_OFF_JETSON 0x50c
+// 12.5 tested on Jetpack 6.x with cuda-compat-12-5 (AGX Orin, Dec 2024)
+#define CU_12_6_MASK_OFF_JETSON 0x514
+// 12.6 tested on Jetpack 6.x with cuda-compat-12-6 (AGX Orin, Dec 2024)
 
 // Used up through CUDA 11.8 in the stream struct
 struct stream_sm_mask {
@@ -419,6 +433,15 @@ void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask) {
 		break;
 	case 11040:
 		hw_mask = (struct stream_sm_mask*)(stream_struct_base + CU_11_4_MASK_OFF_JETSON);
+		break;
+	case 12020:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_2_MASK_OFF_JETSON);
+		break;
+	case 12040:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_4_MASK_OFF_JETSON);
+		break;
+	case 12050:
+		hw_mask_v2 = (void*)(stream_struct_base + CU_12_5_MASK_OFF_JETSON);
 		break;
 	case 12060:
 		hw_mask_v2 = (void*)(stream_struct_base + CU_12_6_MASK_OFF_JETSON);
