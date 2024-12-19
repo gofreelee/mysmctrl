@@ -1,5 +1,4 @@
-CC = gcc
-CXX = g++
+# Note that CXX and CC are predefined as g++ and cc (respectively) by Make
 NVCC ?= nvcc
 # -fPIC is needed in all cases, as we may be linked into another shared library
 CFLAGS = -fPIC

@@ -126,7 +126,7 @@ int test_constrained_size_and_location(enum partitioning_type part_type) {
     if (smids_partitioned_h[NUM_BLOCKS - 1] > (enabled_tpc * sms_per_tpc) + sms_per_tpc - 1 ||
         smids_partitioned_h[NUM_BLOCKS - 1] < (enabled_tpc * sms_per_tpc)) {
       printf("%s: ***Test failure.***\n"
-             "%s: Reason: With TPC mask set to"
+             "%s: Reason: With TPC mask set to "
              "constrain all kernels to TPC %d, a kernel was run and found "
              "to run on an SM IDs: as high as %d and as low as %d (range of %d to %d expected).\n",
              program_invocation_name, program_invocation_name, enabled_tpc, smids_partitioned_h[NUM_BLOCKS - 1], smids_partitioned_h[0], enabled_tpc * sms_per_tpc + sms_per_tpc - 1, enabled_tpc * sms_per_tpc);
