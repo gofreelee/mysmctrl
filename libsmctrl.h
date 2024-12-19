@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 Joshua Bakita
+ * Copyright 2022-2024 Joshua Bakita
  * Library to control TPC masks on CUDA launches. Co-opts preexisting debug
  * logic in the CUDA driver library, and thus requires a build with -lcuda.
  */
@@ -15,7 +15,7 @@ typedef unsigned __int128 uint128_t;
 
 // Set global default TPC mask for all kernels, incl. CUDA-internal ones
 // @param mask   A bitmask of enabled/disabled TPCs (see Notes on Bitmasks)
-// Supported: CUDA 10.2, and CUDA 11.0 - CUDA 12.1
+// Supported: CUDA 6.5 - CUDA 12.6
 extern void libsmctrl_set_global_mask(uint64_t mask);
 // Set default TPC mask for all kernels launched via `stream`
 // (overrides global mask)
@@ -27,7 +27,7 @@ extern void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask);
 // Set TPC mask for the next kernel launch from the caller's CPU thread
 // (overrides global and per-stream masks, applies only to next launch).
 // @param mask   A bitmask of enabled/disabled TPCs (see Notes on Bitmasks)
-// Supported: CUDA 11.0 - CUDA 12.1
+// Supported: CUDA 6.5 - CUDA 12.6
 extern void libsmctrl_set_next_mask(uint64_t mask);
 
 /**

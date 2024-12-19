@@ -3,7 +3,7 @@ CXX = g++
 NVCC ?= nvcc
 # -fPIC is needed in all cases, as we may be linked into another shared library
 CFLAGS = -fPIC
-LDFLAGS = -lcuda -I/usr/local/cuda/include -ldl
+LDFLAGS = -lcuda -I/usr/local/cuda/include
 
 .PHONY: clean tests
 

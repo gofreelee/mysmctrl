@@ -93,18 +93,16 @@ make tests
 #### Known Working
 
 - NVIDIA GPUs from compute capability 3.5 through 8.9, including embedded "Jetson" GPUs
-- CUDA 8.0 through 12.6
+- CUDA 6.5 through 12.6
 - `x86_64` and Jetson `aarch64` platforms
 
 #### Known Issues
 
-- `next_mask` will not override `stream_mask` on CUDA 11.0+
-    - _As of Feb 2024, a fix for this is coming soon..._
 - `global_mask` and `next_mask` cannot disable TPCs with IDs above 128
     - Only relevant on GPUs with over 128 TPCs, such as the RTX 6000 Ada
-- Untested on H100 (compute capability 9.0)
 - Untested on non-Jetson `aarch64` platforms
 - Untested on CUDA 11.8, 12.0, and 12.1 on Jetson `aarch64`
+- Mask bit indexes do not directly correlate to software-visible TPC/SM IDs in V4 TMD/QMDs (Hopper+; compute capability 9.0). The mask bit indexes instead appear to correspond to on-chip-units, including disabled ones; i.e. the set of pre-SM-ID-remapping and pre-floorsweeping TPCs
 
 ## Important Limitations
 
