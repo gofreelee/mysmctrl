@@ -143,7 +143,7 @@ void libsmctrl_set_global_mask(uint64_t mask) {
 		// The version will not change while running, so only check once
 		int ver = 0;
 		cuDriverGetVersion(&ver);
-		if (ver < 6050) {
+		if (ver < 6050)
 			abort(1, ENOSYS, "Global masking requires at least CUDA 6.5; "
 			                 "this application is using CUDA %d.%d",
 			                 ver / 1000, (ver % 100));
@@ -158,7 +158,7 @@ void libsmctrl_set_next_mask(uint64_t mask) {
 		// The version will not change while running, so only check once
 		int ver = 0;
 		cuDriverGetVersion(&ver);
-		if (ver < 6050) {
+		if (ver < 6050)
 			abort(1, ENOSYS, "Next masking requires at least CUDA 6.5; "
 			                 "this application is using CUDA %d.%d",
 			                 ver / 1000, (ver % 100));
