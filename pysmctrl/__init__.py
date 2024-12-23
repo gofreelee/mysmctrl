@@ -4,7 +4,7 @@ import os
 # If this is failing, make sure that the directory containing libsmctrl.so is
 # in your LD_LIBRARY_PATH environment variable. You likely need something like:
 # LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/playpen/jbakita/gpu_subdiv/libsmctrl/
-libsmctrl_path = ctypes.util.find_library("libsmctrl")
+libsmctrl_path = ctypes.util.find_library("smctrl")
 if not libsmctrl_path:
     libsmctrl_path = __path__[0] + "/../libsmctrl.so"
 libsmctrl = ctypes.CDLL(libsmctrl_path)
