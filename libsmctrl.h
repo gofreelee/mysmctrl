@@ -24,6 +24,7 @@ extern void libsmctrl_set_global_mask(uint64_t mask);
 // Supported: CUDA 8.0 - CUDA 12.6
 extern void libsmctrl_set_stream_mask(void* stream, uint64_t mask);
 extern void libsmctrl_set_stream_mask_ext(void* stream, uint128_t mask);
+extern void libsmctrl_set_stream_mask_lzc(void* stream, uint32_t mask1, uint32_t mask2, uint32_t mask3, uint32_t mask4);
 // Set TPC mask for the next kernel launch from the caller's CPU thread
 // (overrides global and per-stream masks, applies only to next launch).
 // @param mask   A bitmask of enabled/disabled TPCs (see Notes on Bitmasks)

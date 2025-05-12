@@ -137,6 +137,14 @@ static void setup_sm_control_callback() {
 		abort(1, 0, "Error enabling launch callback. CUDA returned error code %d.", res);
 }
 
+ void libsmctrl_set_stream_mask_lzc(void* stream, uint32_t mask1, uint32_t mask2, uint32_t mask3, uint32_t mask4){
+		 uint128_t new_mask = 0;
+		 new_mask |= ((uint128_t)(mask1) << 96);
+         new_mask |= ((uint128_t)(mask2) << 64);
+         new_mask |= ((uint128_t)(mask3) << 32);
+         new_mask |= ((uint128_t)(mask4));
+         libsmctrl_set_stream_mask_ext(stream, new_mask);
+ }
 // Set default mask for all launches
 void libsmctrl_set_global_mask(uint64_t mask) {
 	if (!sm_control_setup_called) {
